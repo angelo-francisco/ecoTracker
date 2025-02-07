@@ -5,5 +5,7 @@ services:
     runtime: python
     buildCommand: |
       pip install -r requirements.txt
+      python manage.py makemigrations
+      python manage.py migrate
     startCommand: "gunicorn core.wsgi:application"
     autoDeploy: true
