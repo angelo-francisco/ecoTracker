@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "codepoint-api-rest"
+version = "1.0.0"
+description = "Uma api rest feita para atender ao desafio da codepoint, seguindo critérios e parâmetros estabelecidos pelo enunciado."
+authors = ["angelo-francisco <ics20080729@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
