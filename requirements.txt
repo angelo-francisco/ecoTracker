@@ -13,4 +13,5 @@ taskipy==1.14.1
 tomli==2.2.1
 typing-extensions==4.12.2
 tzdata==2025.1
+pyjwt==2.10.1
 gunicorn
