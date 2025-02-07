@@ -25,4 +25,4 @@ class Action(models.Model):
     def save(self, *args, **kwargs):
         if self.points < 0:
             raise ValueError("Os pontos devem ser um inteiro positivo.")
-        return self.save(*args, **kwargs)
+        return super().save(*args, **kwargs)

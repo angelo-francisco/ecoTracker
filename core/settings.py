@@ -11,9 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-h@biztit9l@!h5tvmtm6os9wv2^=uv8o7^ljwe9u=r0ee1q4qy"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['ecotracker-95nt.onrender.com', '*']
+ALLOWED_HOSTS = ['ecotracker-95nt.onrender.com', '127.0.0.1']
 
 
 # Application definition
