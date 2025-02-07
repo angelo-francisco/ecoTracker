@@ -3,5 +3,7 @@ services:
     plan: free
     name: core
     runtime: python
-    buildCommand: "./build.sh"
-    startCommand: "python -m manage.py runserver"
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: "gunicorn core.wsgi:application"
+    autoDeploy: true
