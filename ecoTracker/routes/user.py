@@ -54,7 +54,7 @@ def login(request, data: dict = Body(...)):
     return 401, {"message": "Credenciais inválidas", "type": "error"}
 
 
-@user_route.post("/logout", auth=jwt_auth)
+@user_route.get("/logout", auth=jwt_auth)
 def logout(request):
     """
     Endpoint para fechamento a sessão e reset do token JWT.
