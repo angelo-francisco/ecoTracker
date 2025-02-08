@@ -6,12 +6,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from ninja.security import HttpBearer
 
 
-def create_token(user: User):
+def create_token(user):
     """Gera um token JWT para o usuário"""
+    now = datetime.datetime.utcnow()
     payload = {
         "id": user.id,
-        "exp": datetime.datetime.now() + datetime.timedelta(days=1),
-        "iat": datetime.datetime.now(),
+        "exp": now + datetime.timedelta(days=1),
+        "iat": now, 
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 

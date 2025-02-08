@@ -61,13 +61,12 @@ def check_user_is_authenticated(request):
     Verifica se o token existe e se é válido.
     """
     token = request.COOKIES.get("access_token")
-    
+    print(token)
     if not token:
         return Response({"message": "Usuário não está autenticado", "type": "error"}, status=400)
 
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        
         expiration_time = datetime.fromtimestamp(decoded_token['exp'])
         if expiration_time < datetime.now():
             return Response({"message": "Token expirado", "type": "error"}, status=400)

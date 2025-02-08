@@ -13,7 +13,6 @@ django-cors-headers = "^4.7.0"
 pyjwt = "^2.10.1"
 python-dotenv = "^1.0.1"
 psycopg2 = "^2.9.10"
-dj-database-url = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 taskipy = "^1.14.1"
