@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ["core-58rc.onrender.com", "127.0.0.1", "localhost"]
 
@@ -70,8 +70,15 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
-DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 
 # Password validation
@@ -115,6 +122,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# CORS 
+
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]

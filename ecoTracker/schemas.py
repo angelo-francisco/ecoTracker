@@ -36,3 +36,7 @@ class UserSchema(Schema):
     id: int
     username: str
     email: str = None
+
+
+class TokenSchema(Schema):
+    token: str
