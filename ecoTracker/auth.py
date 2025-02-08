@@ -10,8 +10,8 @@ def create_token(user: User):
     """Gera um token JWT para o usuário"""
     payload = {
         "id": user.id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1),
-        "iat": datetime.datetime.utcnow(),
+        "exp": datetime.datetime.now() + datetime.timedelta(days=1),
+        "iat": datetime.datetime.now(),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 

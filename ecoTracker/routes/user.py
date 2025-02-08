@@ -46,7 +46,7 @@ def login(request, data: dict = Body(...)):
             token,
             httponly=True,
             secure=True,
-            max_age=3600,
+            max_age=24*3600,
             samesite="Lax",
         )
 
