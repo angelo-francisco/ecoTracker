@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 
+from django.db.models import Sum
 from ninja import Router
 
 from ..auth import jwt_auth
@@ -14,7 +15,7 @@ from ..schemas import (
 action_router = Router(tags=["Actions"], auth=jwt_auth)
 
 
-@action_router.post("/actions", response=ActionSchema)
+@action_router.post("/create", response=ActionSchema)
 def create_action(request, payload: ActionCreateOrUpdateSchema):
     """
     Cria uma nova ação sustentável para o usuário autenticado.
@@ -30,7 +31,7 @@ def create_action(request, payload: ActionCreateOrUpdateSchema):
     return action
 
 
-@action_router.get("/actions", response=List[ActionSchema])
+@action_router.get("/list", response=List[ActionSchema])
 def list_actions(request):
     """
     Lista todas as ações sustentáveis cadastradas pelo usuário autenticado.
@@ -41,7 +42,7 @@ def list_actions(request):
 
 
 @action_router.get(
-    "/actions/{action_id}",
+    "/get/{action_id}",
     response={200: ActionSchema, 404: MessageSchema},
 )
 def get_action(request, action_id: UUID):
@@ -55,7 +56,7 @@ def get_action(request, action_id: UUID):
 
 
 @action_router.put(
-    "/actions/{action_id}",
+    "/update/{action_id}",
     response={200: ActionSchema, 404: MessageSchema},
 )
 def update_action(request, action_id: UUID, payload: ActionCreateOrUpdateSchema):
@@ -77,7 +78,7 @@ def update_action(request, action_id: UUID, payload: ActionCreateOrUpdateSchema)
 
 
 @action_router.delete(
-    "/actions/{action_id}",
+    "/del/{action_id}",
     response={200: MessageSchema, 404: MessageSchema},
 )
 def delete_action(request, action_id: UUID):
@@ -91,3 +92,19 @@ def delete_action(request, action_id: UUID):
 
     action.delete()
     return 200, {"message": "Ação deletada com sucesso!", "type": "success"}
+
+
+@action_router.get(
+    "/total-points",
+)
+def get_user_points(request):
+    """
+    Endpoint que retorna o total de pontos das ações registradas.
+    """
+    user = request.auth
+
+    total_points = Action.objects.filter(user=user).aggregate(
+        total_points=Sum("points")
+    )["total_points"]
+
+    return {"total_points": total_points or 0}

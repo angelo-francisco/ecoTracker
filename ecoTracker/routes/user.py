@@ -61,7 +61,7 @@ def check_user_is_authenticated(request):
     Verifica se o token existe e se é válido.
     """
     token = request.COOKIES.get("access_token")
-    print(token)
+    
     if not token:
         return Response({"message": "Usuário não está autenticado", "type": "error"}, status=400)
 
