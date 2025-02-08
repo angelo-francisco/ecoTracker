@@ -47,7 +47,7 @@ def login(request, data: dict = Body(...)):
             httponly=True,
             secure=True,
             max_age=24*3600,
-            samesite="Lax",
+            samesite="None",
         )
 
         return response
@@ -61,7 +61,7 @@ def check_user_is_authenticated(request):
     Verifica se o token existe e se é válido.
     """
     token = request.COOKIES.get("access_token")
-    
+
     if not token:
         return Response({"message": "Usuário não está autenticado", "type": "error"}, status=400)
 
