@@ -8,7 +8,7 @@ from django.db.models import Q
 from ninja import Body, Router
 from ninja.responses import Response
 
-from ..auth import create_token
+from ..auth import create_token, jwt_auth
 from ..schemas import MessageSchema, TokenSchema, UserCreateSchema, UserSchema
 
 user_route = Router(tags=["Users"])
@@ -46,12 +46,22 @@ def login(request, data: dict = Body(...)):
             token,
             httponly=True,
             secure=True,
-            max_age=24*3600,
+            max_age=24 * 3600,
             samesite="None",
         )
 
         return response
     return 401, {"message": "Credenciais inválidas", "type": "error"}
+
+
+@user_route.post("/logout", auth=jwt_auth)
+def logout(request):
+    """
+    Endpoint para fechamento a sessão e reset do token JWT.
+    """
+    response = Response({"message": "Logout efetuado!"})
+    response.delete_cookie("access_token", path="/")
+    return response
 
 
 @user_route.get("/check", response={200: MessageSchema, 400: MessageSchema})
@@ -63,20 +73,26 @@ def check_user_is_authenticated(request):
     token = request.COOKIES.get("access_token")
 
     if not token:
-        return Response({"message": "Usuário não está autenticado", "type": "error"}, status=400)
+        return Response(
+            {"message": "Usuário não está autenticado", "type": "error"}, status=400
+        )
 
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        expiration_time = datetime.fromtimestamp(decoded_token['exp'])
+        expiration_time = datetime.fromtimestamp(decoded_token["exp"])
         if expiration_time < datetime.now():
             return Response({"message": "Token expirado", "type": "error"}, status=400)
-        return Response({"message": "Usuário autenticado", "type": "success"}, status=200)
-    
+        return Response(
+            {"message": "Usuário autenticado", "type": "success"}, status=200
+        )
+
     except jwt.ExpiredSignatureError:
         return Response({"message": "Token expirado", "type": "error"}, status=400)
-    
+
     except jwt.InvalidTokenError:
         return Response({"message": "Token Inválido", "type": "error"}, status=400)
-    
+
     except Exception as e:
-        return Response({"message": f"An error occurred: {str(e)}", "type": "error"}, status=500)
+        return Response(
+            {"message": f"An error occurred: {str(e)}", "type": "error"}, status=500
+        )
